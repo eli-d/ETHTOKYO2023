@@ -1,5 +1,7 @@
 enum Trust {
-    NONE,
+    // could be nice to have PARTIAL_ONE/PARTIAL_TWO
+    // for UX on how trusted an account is
+    // alt: just have PARTIAL
     PARTIAL_ONE,
     PARTIAL_TWO,
     FULL
