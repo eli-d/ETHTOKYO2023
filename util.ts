@@ -10,9 +10,15 @@ enum Trust {
     FULL
 };
 
+enum Authenticity {
+    NONE,
+    AUTHENTIC
+};
+
 type Account = {
     address: string;
     trust: Trust;    
+    authenticity: Authenticity;
 }
 
 export const getAccounts = async(): Promise<Account[]> => {
@@ -33,7 +39,8 @@ export const importOwnerProof = async(proof: string): Promise<string> => {
 export const lookupAddress = async(address: string): Promise<Account> => {
     return {
         address,
-        trust: Trust.NONE
+        trust: Trust.NONE,
+        authenticity: Authenticity.NONE
     }
 }
 
