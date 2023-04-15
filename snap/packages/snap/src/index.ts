@@ -14,20 +14,38 @@ import { panel, text } from '@metamask/snaps-ui';
 export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
   switch (request.method) {
     case 'hello':
-      return snap.request({
+          return (async() => {
+              const res = await snap.request({
         method: 'snap_dialog',
         params: {
           type: 'confirmation',
           content: panel([
             text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
+              text('Would you like to post this verification?'),
             text(
-              'But you can edit the snap source code to make it do something, if you want to!',
+                "Posting this verification will allow you to show the transaction to others as proof that the verification is cryptographically correct.",
             ),
           ]),
         },
-      });
+      })
+
+          if (res) {
+            console.log('suck own dick');
+              let accounts = await ethereum.request({method: 'eth_requestAccounts'});
+              console.log(request);
+              
+              ethereum.request({method: 'eth_sendTransaction', params: [
+  {
+      from: accounts[0],
+    to: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+    data: request.params[0],
+  },
+]})
+          }
+                  return res;
+          })()
     default:
       throw new Error('Method not found.');
   }
 };
+
