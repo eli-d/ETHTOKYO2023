@@ -40,7 +40,10 @@ const Home = () => {
       {showQrCode && <QrModal handleModal={() => {setShowQrCode(false)}} />}
       <div />
       <Card>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <ConnectKitButton />
+          <span onClick={() => {}} style={{color: '#bbb', textDecoration: 'underline', cursor: 'pointer'}}>Add my ID to MetaMask Snap</span>
+        </div>
         { !showQrCode &&
         <Button 
         fill

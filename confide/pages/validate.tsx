@@ -46,7 +46,7 @@ const itemVariants = {
 const Validate = () => {
   const router = useRouter()
   const [slide, setSlide] = useState(0)
-  const [addy, setAddress] = useState('')  
+  const [testAddress, setTestAddress] = useState('')  
   const [trustworthiness, setTrustworthiness] = useState(undefined)
   const [authenticity, setAuthenticity] = useState(undefined)
   const regex = useMemo(() => new RegExp("^0x[a-fA-F0-9]{40}$"), [])
@@ -73,7 +73,7 @@ const Validate = () => {
   useEffect(() => {
   if (routerAddress && address && regex.test(routerAddress)) {
     setSlide(3)
-    setAddress(routerAddress)
+    setTestAddress(routerAddress)
     verify(address, routerAddress)
   }
   }, [routerAddress, address, regex])
@@ -102,7 +102,7 @@ const Validate = () => {
       constraints={{ facingMode: "environment" }}
       onResult={(result, error) => {
         if (!!result) {
-          
+
         }
 
         if (!!error) {
@@ -123,31 +123,36 @@ const Validate = () => {
     display: 'flex', gap:'1em', width:'100%', alignItems: 'center', flexWrap: 'wrap', flexDirection: 'row'
   }}>
     <motion.div layoutId="input" className={"input"}>
-      <input value={addy} onChange={v => {setAddress(v.target.value)
+      <input value={testAddress} onChange={v => {setTestAddress(v.target.value)
       setHint(undefined)}} type="text" autoFocus/>
     </motion.div>
     <Button onClick={() => {
-      if (!regex.test(addy)) {
+      if (!regex.test(testAddress)) {
         setHint("Invalid address")
         return
       }
-      address && verify(address, addy)}} color="light">Check</Button>
+      address && verify(address, testAddress)}} color="light">Check</Button>
       {hint}
   </div>}
 
 
   const FinalStep = () => <>
-    <p>{addy}</p>
+    <p>{testAddress}</p>
     <div
       style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0'}}
     >
-      <Badge size="lg" trust={authenticity ? Trust.VERIFY : Trust.NONE}/>
-      <p>We cannot validate the authenticity of this user.</p>
+      <Badge size="lg" trust={!authenticity ? Trust.NONE : (
+        !trustworthiness ? Trust.NONE : Trust.VERIFY
+      )}/>
+      { !authenticity ? <p>We cannot validate the authenticity of this user.</p> :
+      ( !trustworthiness ? <p>This person might be real, but we cannot verify their trustworthiness.</p> :
+      <p>This person is likely to be real and trustworthy.</p>)
+    }
     </div>
 
     <Button color={authenticity ? "light" : "danger"}
       onClick={() => {
-        router.push(`/verify?address=${addy}`)
+        router.push(`/verify?address=${testAddress}`)
       }}
     >
       Add this user to my Circle {!authenticity && "anyway"}
