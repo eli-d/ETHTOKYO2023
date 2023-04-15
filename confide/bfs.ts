@@ -1,14 +1,4 @@
-import {ethers} from "ethers";
-import CONFIDE_ABI from "./Confide.json";
-import {Trust} from "./util";
-
-export const CONFIDE_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const ConfideContract = (async () => {
-    const provider = new ethers.JsonRpcProvider('http://localhost:8545');
-    const signer = await provider.getSigner();
-    return new ethers.Contract(CONFIDE_CONTRACT_ADDRESS, CONFIDE_ABI, signer);
-})();
-
+import {ConfideContract, Trust} from "./util";
 
 export const backtrace = (parent: Map<string, string>, a: string, b: string) => {
     let path = [b];
@@ -27,7 +17,7 @@ export const backtrace = (parent: Map<string, string>, a: string, b: string) => 
 }
 
 const findPath_ = async(a: string, b: string) => {
-    const contract = await ConfideContract;
+    const contract = await ConfideContract();
 
     let seen = new Set();
     
@@ -74,7 +64,7 @@ export const findPath = async(a: string, b: string) => {
 }
 
 const findTrustedIntermediaries_ = async(a: string, b: string) => {
-    const contract = await ConfideContract;
+    const contract = await ConfideContract();
 
     const edges = await contract.getEdges(a);
 

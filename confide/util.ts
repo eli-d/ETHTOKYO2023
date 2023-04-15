@@ -33,7 +33,7 @@ export const getTrustedAccounts = async(address: string): Promise<Account[]> => 
     const contract = await ConfideContract();
     const edges: Array<[address: string, trust: Trust]> = await contract.getEdges(address);
     // TODO authenticity
-    return edges.map(([address, trust]) => ({address, trust, authenticity: Authenticity.NONE}))
+    return edges.length === 0 ? [] : edges.map(([address, trust]) => ({address, trust, authenticity: Authenticity.NONE}))
 }
 
 // b64
