@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { MutableRefObject, useEffect, useRef, useState } from 'react'
 import { Button } from './Button'
 import styles from './Navbar.module.scss'
 import { useRouter } from 'next/router';
+
+import { motion } from 'framer-motion'
 
 export const Navbar: React.FC = () => {
 
@@ -13,17 +15,23 @@ export const Navbar: React.FC = () => {
   const [showScanModal, setShowScanModal] = useState(false)
 
   return <div className={styles.Navbar}>
+    {showScanModal && <ScanModal handleModal={()=>{setShowScanModal(false)}}/>}
     <div className={`${styles.item} ${path === "/home" ? styles.active : ''}`}
       onClick={() => router.push('/home')}
     >
       <PrintIcon />
         My ID
     </div>
-    <Button
+    {
+      !showScanModal ? <Button
+      as="motion.div"
+      layoutId="dark"
       circular 
       icon={<img src="/icons/scan.svg" alt="qr icon" />}
       onClick={() => setShowScanModal(true)}
-    />
+    /> : <div />
+    }
+   
     <div className={`${styles.item} ${path === "/circle" ? styles.active : ''}`}
       onClick={() => router.push('/circle')}
     >
@@ -33,10 +41,43 @@ export const Navbar: React.FC = () => {
   </div>
 }
 
-const ScanModal = () => {
-  return <div>
+const ScanModal = ({ handleModal }: { handleModal: () => void}) => {
 
-  </div>
+  const ref = useRef() as MutableRefObject<HTMLDivElement>;
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        handleModal()
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [ref])
+
+  return <motion.div ref={ref} className={styles.ScanModal} layoutId="dark">
+    <div className={styles.option} onClick={() => {
+      handleModal()
+      router.push('/validate')
+    }
+    }>
+      <h3>Validate</h3>
+      <p>Check the identity of another person.</p>
+    </div>
+    <div className={styles.divider}/>
+    <div className={styles.option} onClick={() => {
+      handleModal()
+      router.push('/verify')
+    }
+    }>
+      <h3>Verify</h3>
+      <p>Provide verification for a known party or a friend.</p>
+    </div>
+  </motion.div>
 }
 
 const PrintIcon = () => {
@@ -92,7 +133,7 @@ const RadarIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_23_79)">
+      <g clipPath="url(#clip0_23_79)">
         <path
           d="M15.9991 19.4611C17.9112 19.4611 19.4613 17.911 19.4613 15.9989C19.4613 14.0867 17.9112 12.5366 15.9991 12.5366C14.087 12.5366 12.5369 14.0867 12.5369 15.9989C12.5369 17.911 14.087 19.4611 15.9991 19.4611Z"
           stroke="currentColor"
