@@ -3,7 +3,7 @@ import styles from './Validate.module.scss'
 import { Button } from '@/components/Button'
 import { QrReader } from 'react-qr-reader'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useState } from 'react'
+import { LegacyRef, MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { findPath, verifyAuthLocal, verifyTrustLocal } from '@/util'
 import Head from 'next/head'
@@ -117,12 +117,15 @@ const Validate = () => {
 
   const Input = () => {
     const [hint, setHint] = useState<string | undefined>(undefined)
+    const inputRef = useRef<HTMLInputElement>();
 
   return <div style={{
     display: 'flex', gap:'1em', width:'100%', alignItems: 'center', flexWrap: 'wrap', flexDirection: 'row'
   }}>
-    <motion.div layoutId="input" className={"input"}>
-      <input value={testAddress} onChange={v => {setTestAddress(v.target.value)
+    <motion.div layoutId="input" className={"input"} onClick={() => {
+      inputRef.current?.focus()
+    }}>
+      <input ref={inputRef as LegacyRef<HTMLInputElement> | undefined} value={testAddress} onChange={v => {setTestAddress(v.target.value)
       setHint(undefined)}} type="text" autoFocus/>
     </motion.div>
     <Button onClick={() => {
