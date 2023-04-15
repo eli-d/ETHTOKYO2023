@@ -16,7 +16,6 @@ type Data = {
   name?: string
 }[]
 
-
 const containerVariants = {
   initial: {
   },
@@ -58,11 +57,26 @@ const Circle = () => {
       router.push('/')
       return;
     }
+
+  }, [address, router])
+
+  useEffect(() => {
+    if (!address) { return }
+
+
+
     (async() => {
       const accounts = await getTrustedAccounts(address);
       setAccounts(accounts);
     })()
-  }, [address, router])
+
+    //do the above again after 2 seconds
+    const interval = setInterval(async () => {
+      const accounts = await getTrustedAccounts(address);
+      setAccounts(accounts);
+    }
+    , 2000)
+  }, [address, router.pathname])
 
   const newAccs = accounts.filter(e => e.trust !==0)
 
