@@ -1,5 +1,5 @@
 import { Trust } from '@/types'
-import styles from './Bade.module.scss'
+import styles from './Badge.module.scss'
 
 interface IBadge {
   trust: Trust

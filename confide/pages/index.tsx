@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { Badge } from '@/components/Badge'
+import { Trust } from '@/types'
+import { Button } from '@/components/Button'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,7 +17,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Badge />
+      <Badge 
+        trust={Trust.VERIFY}
+      />
+      <Button 
+      icon={<img src="/icons/qr.svg" />}
+      >
+        Hello world
+      </Button>
     </>
   )
 }
