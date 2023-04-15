@@ -1,5 +1,6 @@
 import {ethers} from "ethers";
 import CONFIDE_ABI from "./Confide.json";
+import { promptPost } from "./snap.ts";
 
 export enum Trust {
     NONE=0,
@@ -197,6 +198,23 @@ export const verifyTrust = async(myAddress: string, addressToTrust: string, sign
 }
 
 // Get path of trust between two parties and verify it on-chain
+export const verifyTrustPrompt = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
+    const contract = await ConfideContract(signer);
+
+    if (await contract.getTrustLevel(myAddress, addressToTrust) > 1) {
+        promptPost(contract.interface.encodeFunctionData("postConnected", [myAddress, addressToTrust, []]));
+        return;
+    }
+
+    const intermediaries = findTrustedIntermediaries(myAddress, addressToTrust);
+
+    if (intermediaries.length == 0) {
+        return;
+    }
+    promptPost(contract.interface.encodeFunctionData("postConnected", [myAddress, addressToTrust, intermediaries]));
+}
+
+// Get path of trust between two parties and verify it on-chain
 export const verifyTrustLocal = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
@@ -233,6 +251,18 @@ export const verifyAuth = async(myAddress: string, addressToTrust: string, signe
     } catch (e) {
         return false;
     }
+}
+
+// Get path of authenticity (5 degrees) between two parties and verify it on-chain
+export const verifyAuthPrompt = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
+    const contract = await ConfideContract(signer);
+
+    const path = findPath(myAddress, addressToTrust);
+
+    if (path.length == 0) {
+        return false;
+    }
+    promptPost(contract.interface.encodeFunctionData("postConnected5Degrees", [myAddress, addressToTrust, path.slice(1,path.length-1)]));
 }
 
 // Get path of authenticity (5 degrees) between two parties and verify it on-chain
