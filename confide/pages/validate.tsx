@@ -6,14 +6,17 @@ const Validate = () => {
   return <motion.div layoutId="dark" className={styles.Validate}>
     <main>
       <h2>Validate user</h2>
-      <Button color="keyline" fill>
-        Enter address manually
-      </Button>
-      <Button color="light" fill icon={
-        <QrIcon />
-      }>
-        Scan code
-      </Button>
+      <section>
+        <Button color="keyline" fill>
+          Enter address manually
+        </Button>
+        <Button color="light" fill icon={
+          <QrIcon />
+        }>
+          Scan code
+        </Button>
+      </section>
+      <div />
     </main>
   </motion.div>
 }
