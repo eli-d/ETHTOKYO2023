@@ -96,16 +96,18 @@ const Validate = () => {
     </>
   );
 
-  const Reader = () => (
-    <QrReader
+  const Reader = () => {
+    const urlReg = new RegExp(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/);
+
+    return <QrReader
       constraints={{ facingMode: "environment" }}
       onResult={(result, error) => {
-        if (!!result) {
-
-        }
+        if (!!result && urlReg.test(result.getText())) {
+          router.push(result.getText())
+        } 
 
         if (!!error) {
-          console.info(error);
+          console.info(error.message);
         }
       }}
       videoStyle={{
@@ -113,7 +115,7 @@ const Validate = () => {
         borderRadius: "16px",
       }}
     />
-  )
+    }
 
   const Input = () => {
     const [hint, setHint] = useState<string | undefined>(undefined)
@@ -133,7 +135,7 @@ const Validate = () => {
         setHint("Invalid address")
         return
       }
-      address && verify(address, testAddress)}} color="light">Check</Button>
+      address && verify(address, testAddress)}} fill color="light">Check</Button>
       {hint}
   </div>}
 
@@ -174,10 +176,10 @@ const Validate = () => {
       <AnimatePresence
       exitBeforeEnter
       >
-      <motion.h2 variants={itemVariants} exit={{opacity: 0, y:-20}}>Validate user</motion.h2>
+      <motion.h2 variants={itemVariants} exit={{opacity: 0, y:-20}}>Validate User</motion.h2>
       <motion.section variants={itemVariants} exit={{opacity: 0, y:-20}}>
         <AnimatePresence exitBeforeEnter>
-        <motion.div 
+        <motion.section 
           initial={{
             opacity: 0,
             y: 50
@@ -202,7 +204,7 @@ const Validate = () => {
           {slide === 2 && <Input />}
           {slide === 3 && <FinalStep />}
           </>}
-        </motion.div>
+        </motion.section>
         </AnimatePresence>
       </motion.section>
 

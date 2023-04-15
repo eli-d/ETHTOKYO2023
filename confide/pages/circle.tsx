@@ -64,6 +64,8 @@ const Circle = () => {
     })()
   }, [address, router])
 
+  const newAccs = accounts.filter(e => e.trust !==0)
+
   return <div className={styles.Circle}>
           <Head>
         <title>Confide</title>
@@ -80,11 +82,14 @@ const Circle = () => {
         variants={containerVariants}
       >
         {
-          accounts.filter(e => e.trust !==0).map((item, index) => (
+          newAccs.length > 0 ? newAccs.map((item, index) => (
             <motion.div
               key={index}
               className={styles.item}
               variants={itemVariants}
+              onClick={() => {
+                router.push('/verify?address=' + item.address)
+              }}
             >
               <Card>
                 <div style={{display: 'flex', gap: '1em', alignItems: 'center'}}>
@@ -93,7 +98,7 @@ const Circle = () => {
                 </div>
               </Card>
             </motion.div>
-          ))}
+          )) : <span style={{color: '#bbb'}}>Looks like there&apos;s no-one in your Circle. :(</span>}
       </motion.div>
     <Navbar />
   </div>

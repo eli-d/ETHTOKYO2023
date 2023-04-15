@@ -107,10 +107,10 @@ const QrModal = ({ handleModal }: {handleModal: () => void}) => {
       <QRCode 
         value={`https://confide.id/validate?address=${address}`}
         style={{width:'100%'}}
-        bgColor={variables.dark}
-        fgColor={variables.light}
-        qrStyle={"dots"}
-        eyeRadius={8}
+        // bgColor={variables.dark}
+        // fgColor={variables.light}
+        // qrStyle={"dots"}
+        // eyeRadius={8}
       />
     </motion.div>
   </motion.div>
