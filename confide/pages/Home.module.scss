@@ -17,6 +17,18 @@
   left: 50%;
   translate: -50% -50%;
   z-index: 1;
-  @include box-shadow;
+  @include box-shadow-strong;
   border-radius: 16px;
+
+  canvas {
+    width: 100% !important;
+    aspect-ratio: 1/1 !important;
+    height: auto !important;
+  }
+}
+
+:export {
+  dark: $dark;
+  light: $light;
+  primary: $primary;
 }

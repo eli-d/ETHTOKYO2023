@@ -5,6 +5,7 @@ import { ConnectKitButton } from "connectkit";
 import { useAccount } from "wagmi";
 
 import styles from './Home.module.scss'
+import variables from './Home.module.scss'
 import router, { useRouter } from "next/router";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { redirect } from "next/dist/server/api-utils";
@@ -12,6 +13,7 @@ import { Card } from "@/components/Card";
 import { Navbar } from "@/components/Navbar";
 
 import {motion} from 'framer-motion'
+import { QRCode } from "react-qrcode-logo";
 
 const Home = () => {
   const { address, isConnecting, isDisconnected } = useAccount();
@@ -22,7 +24,7 @@ const Home = () => {
     if (!address) {
       router.push('/')
     }
-  }, [address])
+  }, [address, router])
 
   const [showQrCode, setShowQrCode] = useState(false)
 
@@ -66,10 +68,25 @@ const QrModal = ({ handleModal }: {handleModal: () => void}) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
-  }, [ref])
+  }, [ref, handleModal])
 
   return <motion.div ref={ref} className={styles.QrModal} layoutId="qr">
-    hello world
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{duration: 0.5, ease: "easeInOut", delay: 0.2}}
+      style={{textAlign: 'center'}}
+    >
+      My Confide ID:
+      <QRCode 
+        value="hello"
+        style={{width:'100%'}}
+        bgColor={variables.dark}
+        fgColor={variables.light}
+        qrStyle={"dots"}
+        eyeRadius={8}
+      />
+    </motion.div>
   </motion.div>
 }
 

@@ -42,7 +42,7 @@
   width: 100%;
   position: absolute;
   bottom: 5em;
-  @include box-shadow;
+  @include box-shadow-strong;
   border-radius: 16px;
 
   .option {

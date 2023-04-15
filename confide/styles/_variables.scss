@@ -20,6 +20,10 @@ $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 4px 8px rgba(0, 0, 0, 0.082);
 }
 
+@mixin box-shadow-strong {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.153);
+}
+
 @mixin page {
   width: 100%;
   max-width: 600px;
