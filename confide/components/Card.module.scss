@@ -1,0 +1,8 @@
+@import 'variables.scss';
+
+.Card {
+  padding: 1em;
+  // very subtle drop shadow
+  border-radius: 8px;
+  @include box-shadow;
+}
