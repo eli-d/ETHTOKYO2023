@@ -1,6 +1,5 @@
 import {ethers} from "ethers";
 import CONFIDE_ABI from "./Confide.json";
-import { promptPost } from "./snap.ts";
 
 export enum Trust {
     NONE=0,
@@ -203,7 +202,6 @@ export const verifyTrustPrompt = async(myAddress: string, addressToTrust: string
     const contract = await ConfideContract(signer);
 
     if (await contract.getTrustLevel(myAddress, addressToTrust) > 1) {
-        promptPost(contract.interface.encodeFunctionData("postConnected", [myAddress, addressToTrust, []]));
         return;
     }
 
@@ -212,7 +210,6 @@ export const verifyTrustPrompt = async(myAddress: string, addressToTrust: string
     if (intermediaries.length == 0) {
         return;
     }
-    promptPost(contract.interface.encodeFunctionData("postConnected", [myAddress, addressToTrust, intermediaries]));
 }
 
 // Get path of trust between two parties and verify it on-chain
@@ -263,7 +260,6 @@ export const verifyAuthPrompt = async(myAddress: string, addressToTrust: string,
     if (path.length == 0) {
         return false;
     }
-    promptPost(contract.interface.encodeFunctionData("postConnected5Degrees", [myAddress, addressToTrust, path.slice(1,path.length-1)]));
 }
 
 // Get path of authenticity (5 degrees) between two parties and verify it on-chain
