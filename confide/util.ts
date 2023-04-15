@@ -3,12 +3,9 @@ import CONFIDE_ABI from "./Confide.json";
 
 enum Trust {
     NONE,
-    // could be nice to have PARTIAL_ONE/PARTIAL_TWO
-    // for UX on how trusted an account is
-    // alt: just have PARTIAL
-    PARTIAL_ONE,
-    PARTIAL_TWO,
+    PARTIAL,
     FULL,
+    FULLER
 };
 
 enum Authenticity {
@@ -24,7 +21,7 @@ type Account = {
 
 export const CONFIDE_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 export const ConfideContract = (() => {
-    const signer = new ethers.JsonRpcProvider(process.env.CHAIN_URL);
+    const signer = new ethers.JsonRpcProvider();
     return new ethers.Contract(CONFIDE_CONTRACT_ADDRESS, CONFIDE_ABI, signer);
 })();
 
