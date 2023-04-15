@@ -1,0 +1,24 @@
+@import 'variables.scss';
+
+
+.Button {
+  all: unset;
+  padding: 1em;
+  border-radius: 8px;
+  background-color: $dark;
+  color: $light;
+
+  display: flex;
+  gap: 1em;
+  align-items: center;
+
+  &.fill {
+    width: 100%;
+    justify-content: center;
+  }
+
+  &.circular {
+    border-radius: 100px;
+  }
+
+}
