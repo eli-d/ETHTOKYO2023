@@ -1,3 +1,20 @@
-html {
+@import './variables.scss';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  * {
+    box-sizing: border-box;
+  }
   font-family: 'Inter', sans-serif;
+}
+
+#__next {
+  width: 100dvw;
+  height: 100dvh;
+  background-color: $light;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
