@@ -1,24 +1,8 @@
 @import 'variables.scss';
 
 .Badge {
-  &.sm {
-
-  }
-
-  &.lg {
-
-  }
-
-
-  &.verify {
-
-  }
-
-  &.vouch {
-
-  }
-
-  &.confide {
-
+  img {
+    height: 24px;
+    width: 24px;
   }
 }

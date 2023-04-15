@@ -3,11 +3,13 @@ import styles from './Circle.module.scss'
 import { Trust } from '@/types'
 import {motion} from 'framer-motion'
 import { Card } from '@/components/Card'
+import { Badge } from '@/components/Badge'
 
 type Data = {
   account: string // an eth address
   trust: Trust // an enum between 0 and 4
   date?: string // an iso datestring
+  name?: string
 }[]
 
 const dummyData: Data = [
@@ -101,14 +103,17 @@ const Circle = () => {
         variants={containerVariants}
       >
         {
-          dummyData.map((item, index) => (
+          dummyData.filter(e => e.trust !==0).map((item, index) => (
             <motion.div
               key={index}
               className={styles.item}
               variants={itemVariants}
             >
               <Card>
-                {item.account}
+                <div style={{display: 'flex', gap: '1em', alignItems: 'center'}}>
+                  <Badge trust={item.trust} />
+                  {item.account}
+                </div>
               </Card>
             </motion.div>
           ))}
