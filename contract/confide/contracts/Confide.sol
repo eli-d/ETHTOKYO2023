@@ -55,6 +55,17 @@ contract Confide {
         }
     }
 
+    function connected5Degrees(address a, address b, address[] calldata path) public view {
+        require(path.length <= 5, "Path can't be longer than 5");
+        // we only follow full trusts for authentication, but the final edge can be partial
+        address last = a;
+        for (uint i = 0; i < path.length; i++) {
+            require(getTrustLevel(last, path[i]) > 1, "An edge isn't full trust");
+            last = path[i];
+        }
+        require(getTrustLevel(last, b) > 0, "No edge to target");
+    }
+
     function getEdges(address a) public view returns (Trust[] memory) {
         Trust[] memory res = new Trust[](accounts[a].nEdges);
 
@@ -71,7 +82,10 @@ contract Confide {
 
         UserNode storage truster = accounts[a];
 
+        if (truster.edges[b]._address != b) {
+            truster.existingEdges[truster.nEdges++] = ListNode({value: b});
+        }
+
         truster.edges[b] = Trust({_address: b, trustLevel: level});
-        truster.existingEdges[truster.nEdges++] = ListNode({value: b});
     }
 }
