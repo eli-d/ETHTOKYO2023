@@ -3,11 +3,10 @@ import styles from './Validate.module.scss'
 import { Button } from '@/components/Button'
 import { QrReader } from 'react-qr-reader'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useState } from 'react'
+import { LegacyRef, MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
-import { trustAddress, verifyTrustPrompt, verifyAuthPrompt } from '@/util'
-import { findPath, verifyAuth, verifyAuthLocal, verifyTrust, verifyTrustLocal } from '@/bfs'
-import { promptPost } from '@/snap.ts'
+import { trustAddress, verifyTrustPrompt, verifyAuthPrompt, findPath, verifyAuthLocal, verifyTrustLocal } from '@/util'
+// import { promptPost } from '@/snap.ts'
 import Head from 'next/head'
 import { Trust } from '@/types'
 import { Badge } from '@/components/Badge'
@@ -49,7 +48,7 @@ const Validate = () => {
   const [slide, setSlide] = useState(0)
   const [testAddress, setTestAddress] = useState('')  
   const [trustworthiness, setTrustworthiness] = useState(undefined)
-  const [authenticity, setAuthenticity] = useState(undefined)
+  const [authenticity, setAuthenticity] = useState<boolean | undefined>(undefined)
   const regex = useMemo(() => new RegExp("^0x[a-fA-F0-9]{40}$"), [])
 
   const routerAddress = router.query.address as string | undefined
@@ -105,16 +104,18 @@ const Validate = () => {
     </>
   );
 
-  const Reader = () => (
-    <QrReader
+  const Reader = () => {
+    const urlReg = new RegExp(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/);
+
+    return <QrReader
       constraints={{ facingMode: "environment" }}
       onResult={(result, error) => {
-        if (!!result) {
-
-        }
+        if (!!result && urlReg.test(result.getText())) {
+          router.push(result.getText())
+        } 
 
         if (!!error) {
-          console.info(error);
+          console.info(error.message);
         }
       }}
       videoStyle={{
@@ -122,16 +123,19 @@ const Validate = () => {
         borderRadius: "16px",
       }}
     />
-  )
+    }
 
   const Input = () => {
     const [hint, setHint] = useState<string | undefined>(undefined)
+    const inputRef = useRef<HTMLInputElement>();
 
   return <div style={{
     display: 'flex', gap:'1em', width:'100%', alignItems: 'center', flexWrap: 'wrap', flexDirection: 'row'
   }}>
-    <motion.div layoutId="input" className={"input"}>
-      <input value={testAddress} onChange={v => {setTestAddress(v.target.value)
+    <motion.div layoutId="input" className={"input"} onClick={() => {
+      inputRef.current?.focus()
+    }}>
+      <input ref={inputRef as LegacyRef<HTMLInputElement> | undefined} value={testAddress} onChange={v => {setTestAddress(v.target.value)
       setHint(undefined)}} type="text" autoFocus/>
     </motion.div>
     <Button onClick={() => {
@@ -139,7 +143,7 @@ const Validate = () => {
         setHint("Invalid address")
         return
       }
-      address && verify(address, testAddress)}} color="light">Check</Button>
+      address && verify(address, testAddress)}} fill color="light">Check</Button>
       {hint}
   </div>}
 
@@ -147,10 +151,10 @@ const Validate = () => {
   const FinalStep = () => <>
     <p>{testAddress}</p>
     <div
-      style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0'}}
+      style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0', alignItems: 'center'}}
     >
       <Badge size="lg" trust={!authenticity ? Trust.NONE : (
-        !trustworthiness ? Trust.NONE : Trust.VERIFY
+        !trustworthiness ? Trust.VERIFY : Trust.VOUCH
       )}/>
       { !authenticity ? <p>We cannot validate the authenticity of this user.</p> :
       ( !trustworthiness ? <p>This person might be real, but we cannot verify their trustworthiness.</p> :
@@ -180,10 +184,10 @@ const Validate = () => {
       <AnimatePresence
       exitBeforeEnter
       >
-      <motion.h2 variants={itemVariants} exit={{opacity: 0, y:-20}}>Validate user</motion.h2>
+      <motion.h2 variants={itemVariants} exit={{opacity: 0, y:-20}}>Validate User</motion.h2>
       <motion.section variants={itemVariants} exit={{opacity: 0, y:-20}}>
         <AnimatePresence exitBeforeEnter>
-        <motion.div 
+        <motion.section 
           initial={{
             opacity: 0,
             y: 50
@@ -208,7 +212,7 @@ const Validate = () => {
           {slide === 2 && <Input />}
           {slide === 3 && <FinalStep />}
           </>}
-        </motion.div>
+        </motion.section>
         </AnimatePresence>
       </motion.section>
 

@@ -39,12 +39,14 @@ p {
 }
 
 .input {
+  width: 100%;
   min-width: 100px;
   border-radius: 8px;
   border: 1px solid $light;
   color: $light;
   padding: 1em;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 4em;

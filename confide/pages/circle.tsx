@@ -16,7 +16,6 @@ type Data = {
   name?: string
 }[]
 
-
 const containerVariants = {
   initial: {
   },
@@ -58,11 +57,28 @@ const Circle = () => {
       router.push('/')
       return;
     }
+
+  }, [address, router])
+
+  useEffect(() => {
+    if (!address) { return }
+
+
+
     (async() => {
       const accounts = await getTrustedAccounts(address);
       setAccounts(accounts);
     })()
-  }, [address, router])
+
+    //do the above again after 2 seconds
+    const interval = setInterval(async () => {
+      const accounts = await getTrustedAccounts(address);
+      setAccounts(accounts);
+    }
+    , 2000)
+  }, [address, router.pathname])
+
+  const newAccs = accounts.filter(e => e.trust !==0)
 
   return <div className={styles.Circle}>
           <Head>
@@ -70,31 +86,40 @@ const Circle = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/ico" href="/icons/favicon.ico" sizes="32x32"/>
       </Head>
-    <div/>
-      <motion.div className=
-        {styles.list
+      <div />
+      {
+        newAccs.length > 0 ? (
+          <motion.div className=
+          {styles.list
+        }
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={containerVariants}
+        >
+          <span style={{color: '#bbb', textAlign:'center'}}>My Circle of Trust:</span>
+          {
+            newAccs.map((item, index) => (
+              <motion.div
+                key={index}
+                className={styles.item}
+                variants={itemVariants}
+                onClick={() => {
+                  router.push('/verify?address=' + item.address)
+                }}
+              >
+                <Card>
+                  <div style={{display: 'flex', gap: '1em', alignItems: 'center'}}>
+                    <Badge trust={item.trust} />
+                    {item.address}
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+        </motion.div>
+        ) : <span style={{color: '#bbb'}}>Looks like there&apos;s no-one in your Circle. :(</span>
       }
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={containerVariants}
-      >
-        {
-          accounts.filter(e => e.trust !==0).map((item, index) => (
-            <motion.div
-              key={index}
-              className={styles.item}
-              variants={itemVariants}
-            >
-              <Card>
-                <div style={{display: 'flex', gap: '1em', alignItems: 'center'}}>
-                  <Badge trust={item.trust} />
-                  {item.address}
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-      </motion.div>
+
     <Navbar />
   </div>
 }

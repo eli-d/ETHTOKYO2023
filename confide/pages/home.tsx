@@ -42,7 +42,7 @@ const Home = () => {
       <Card>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <ConnectKitButton />
-          <span onClick={() => {}} style={{color: '#bbb', textDecoration: 'underline', cursor: 'pointer'}}>Add my ID to MetaMask Snap</span>
+          <span onClick={() => {}} style={{color: '#bbb', textDecoration: 'underline', cursor: 'pointer'}}>Link my ID with MetaMask Snap</span>
         </div>
         { !showQrCode &&
         <Button 
@@ -107,10 +107,10 @@ const QrModal = ({ handleModal }: {handleModal: () => void}) => {
       <QRCode 
         value={`https://confide.id/validate?address=${address}`}
         style={{width:'100%'}}
-        bgColor={variables.dark}
-        fgColor={variables.light}
-        qrStyle={"dots"}
-        eyeRadius={8}
+        // bgColor={variables.dark}
+        // fgColor={variables.light}
+        // qrStyle={"dots"}
+        // eyeRadius={8}
       />
     </motion.div>
   </motion.div>
