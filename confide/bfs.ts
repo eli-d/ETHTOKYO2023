@@ -97,3 +97,37 @@ export const findTrustedIntermediaries = async(a: string, b: string) => {
         return [];
     }
 }
+
+// Get path of trust between two parties and verify it on-chain
+export const verifyTrust = async(myAddress: string, addressToTrust: string, signer?: ethers.JsonRpcSigner) => {
+    const contract = await ConfideContract(signer);
+
+    const intermediaries = findTrustedIntermediaries(myAddress, addressToTrust);
+
+    if (intermediaries.length == 0) {
+        return false;
+    }
+    try {
+        const resp = await contract.postConnected(myAddress, addressToTrust, intermediaries);
+        return resp.wait().transactionHash;
+    } catch (e) {
+        return false;
+    }
+}
+
+// Get path of authenticity (5 degrees) between two parties and verify it on-chain
+export const verifyAuth = async(myAddress: string, addressToTrust: string, signer?: ethers.JsonRpcSigner) => {
+    const contract = await ConfideContract(signer);
+
+    const path = findPath(myAddress, addressToTrust);
+
+    if (path.length == 0) {
+        return false;
+    }
+    try {
+        const resp = await contract.postConnected5Degrees(myAddress, addressToTrust, path);
+        return resp.wait().transactionHash;
+    } catch (e) {
+        return false;
+    }
+}

@@ -54,6 +54,10 @@ contract Confide {
             connectedPartialTrust(a, b, intermediates[0], intermediates[1], intermediates[2]);
         }
     }
+ 
+    function postConnected(address a, address b, address[] calldata intermediates) public {
+        connected(a, b, intermediates);
+    }
 
     function connected5Degrees(address a, address b, address[] calldata path) public view {
         require(path.length <= 3, "Path can't be longer than 5");
@@ -64,6 +68,10 @@ contract Confide {
             last = path[i];
         }
         require(getTrustLevel(last, b) > 0, "No edge to target");
+    }
+
+    function postConnected5Degrees(address a, address b, address[] calldata path) public {
+        connected5Degrees(a, b, path);
     }
 
     function getEdges(address a) public view returns (Trust[] memory) {
