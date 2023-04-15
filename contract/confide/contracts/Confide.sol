@@ -24,9 +24,11 @@ contract Confide {
     mapping(address => UserNode) accounts;
 
     function getTrustLevel(address a, address b) public view returns (uint8) {
-        require(accounts[a].edges[b]._address == b, "Account is not trusted");
-
-        return accounts[a].edges[b].trustLevel;
+        if (accounts[a].edges[b]._address == b) {
+            return accounts[a].edges[b].trustLevel;
+        } else {
+            return 0;
+        }
     }
 
     function connectedFullTrust(address a, address b, address inter) public view {

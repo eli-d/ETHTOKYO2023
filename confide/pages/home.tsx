@@ -42,7 +42,6 @@ const Home = () => {
       <Card>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <ConnectKitButton />
-          <span onClick={() => {}} style={{color: '#bbb', textDecoration: 'underline', cursor: 'pointer'}}>Link my ID with MetaMask Snap</span>
         </div>
         { !showQrCode &&
         <Button 

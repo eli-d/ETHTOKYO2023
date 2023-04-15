@@ -6,7 +6,6 @@ import { useRouter } from 'next/router'
 import { LegacyRef, MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { trustAddress, verifyTrustPrompt, verifyAuthPrompt, findPath, verifyAuthLocal, verifyTrustLocal } from '@/util'
-// import { promptPost } from '@/snap.ts'
 import Head from 'next/head'
 import { Trust } from '@/types'
 import { Badge } from '@/components/Badge'
@@ -66,13 +65,6 @@ const Validate = () => {
     const trust = await verifyTrustLocal(address, addy);
     setTrustworthiness(trust);
     setAuthenticity(auth);
-
-      if (trust) {
-          verifyTrustPrompt(address, addy);
-      } else if (auth) {
-          verifyAuthPrompt(address, addy);
-      }
-
     setisLoading(false)
     setSlide(3)
   }
