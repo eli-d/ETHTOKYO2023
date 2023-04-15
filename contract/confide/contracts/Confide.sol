@@ -56,7 +56,7 @@ contract Confide {
     }
 
     function connected5Degrees(address a, address b, address[] calldata path) public view {
-        require(path.length <= 5, "Path can't be longer than 5");
+        require(path.length <= 3, "Path can't be longer than 5");
         // we only follow full trusts for authentication, but the final edge can be partial
         address last = a;
         for (uint i = 0; i < path.length; i++) {
