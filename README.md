@@ -7,7 +7,7 @@ The core concepts underlying Confide are Trust and Authenticity. Authenticity re
 
 ## Deployment
 
-- Clone the repo `git clone git@github.com:eli-d/ETHGLOBAL2023`.
+- Clone the repo `git clone git@github.com:eli-d/ETHTOKYO2023`.
 - Navigate to the metamask snap directory `snap/` and `yarn install` dependencies .
 - `yarn start` the snap.
 - Start your own local hardhat node `npx hardhat node`.
