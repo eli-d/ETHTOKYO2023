@@ -1,4 +1,4 @@
-import {ethers} from "ethers";
+import {JsonRpcProvider, JsonRpcSigner, ethers} from "ethers";
 import CONFIDE_ABI from "./Confide.json";
 
 export enum Trust {
@@ -19,15 +19,18 @@ export type Account = {
     authenticity: Authenticity;
 }
 
-export const CONFIDE_CONTRACT_ADDRESS = "0x0B306BF915C4d645ff596e518fAf3F9669b97016";
-export const ConfideContract = (async() => {
-    const provider = new ethers.JsonRpcProvider();
-    const signer = await provider.getSigner();
+export const CONFIDE_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+export const ConfideContract = (async(signer?: ethers.JsonRpcSigner) => {
+    if (!signer) {
+        const provider = new ethers.JsonRpcProvider();
+        signer = await provider.getSigner();
+    }
+        
     return new ethers.Contract(CONFIDE_CONTRACT_ADDRESS, CONFIDE_ABI, signer);
-})();
+})
 
 export const getTrustedAccounts = async(address: string): Promise<Account[]> => {
-    const contract = await ConfideContract;
+    const contract = await ConfideContract();
     const edges: Array<[address: string, trust: Trust]> = await contract.getEdges(address);
     // TODO authenticity
     return edges.map(([address, trust]) => ({address, trust, authenticity: Authenticity.NONE}))
@@ -52,7 +55,7 @@ export const importOwnerProof = async(proof: string, expectedSigner: string, myA
 
 // fetch trust
 export const lookupAddress = async(myAddress: string, otherAddress: string): Promise<Account> => {
-    const contract = await ConfideContract;
+    const contract = await ConfideContract();
     // TODO authenticity
     const trust = await contract.getTrustLevel(myAddress, otherAddress);
     return {
@@ -63,12 +66,12 @@ export const lookupAddress = async(myAddress: string, otherAddress: string): Pro
     }
 }
 
-export const trustAddress = async(myAddress: string, addressToTrust: string, level: Trust) => {
-    const contract = await ConfideContract;
+export const trustAddress = async(myAddress: string, addressToTrust: string, level: Trust, signer?: ethers.JsonRpcSigner) => {
+    const contract = await ConfideContract(signer);
     await contract.trust(myAddress, addressToTrust, level);
 }
 
 export const revokeTrust = async(myAddress: string, addressToTrust: string) => {
-    const contract = await ConfideContract;
+    const contract = await ConfideContract();
     await contract.trust(myAddress, addressToTrust, Trust.NONE);
 }
