@@ -19,6 +19,14 @@
     svg {
     stroke: $gray;
     }
+
+    &.active {
+      color: $primary;
+      svg {
+        color: $primary;
+
+      }
+    }
   }
 
   button {
