@@ -49,6 +49,8 @@ export const Button: React.FC<IButton> = ({
       setShowContent(false)
     }} layoutId={layoutId}>
       {
+        <>
+        {icon && 
         <motion.div
         initial={{
           opacity: 0,
@@ -57,8 +59,22 @@ export const Button: React.FC<IButton> = ({
             opacity: showContent ? 1 : 0,
           }}
         >
-          {[icon, children]}
+          {icon}
         </motion.div>
+        }
+        { children && 
+        <motion.div
+        initial={{
+          opacity: 0,
+        }}
+          animate={{
+            opacity: showContent ? 1 : 0,
+          }}
+        >
+          {children}
+        </motion.div>
+}
+        </>
       }
     </motion.div>
   )
