@@ -16,3 +16,13 @@ $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
 @mixin box-shadow {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 4px 8px rgba(0, 0, 0, 0.082);
 }
+
+@mixin page {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  align-items: center;
+  justify-content: center;
+}

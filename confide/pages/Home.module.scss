@@ -1,11 +1,5 @@
 @import 'variables.scss';
 
 .Home {
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  gap: 2em;
-  align-items: center;
-  justify-content: center;
+ @include page;
 }
