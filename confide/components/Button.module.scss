@@ -6,6 +6,7 @@
   padding: 1em;
   border-radius: 8px;
   background-color: $dark;
+  background: $primary-background;
   color: $light;
   cursor: pointer;
 
@@ -23,7 +24,7 @@
   }
 
   &:hover {
-    background-color: desaturate($color: lighten($dark, 15%), $amount: 100%);
+    opacity: 0.9;
   }
 
 }

@@ -1,5 +1,18 @@
+@font-face {
+  font-family: 'Gilroy-Bold';
+  src: url('/fonts/Gilroy-Bold.ttf');
+}
+
 $dark: #00171F;
 $subtle: #F5F3F4;
 $light: white;
 $primary: #2276FF;
 $secondary: #33A1FD;
+
+$primary-background: linear-gradient(10deg, $primary 0%, $secondary 100%);
+$primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
+
+//make a mixin for a box shadow
+@mixin box-shadow {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 4px 8px rgba(0, 0, 0, 0.082);
+}
