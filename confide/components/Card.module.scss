@@ -2,7 +2,12 @@
 
 .Card {
   padding: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   // very subtle drop shadow
   border-radius: 8px;
   @include box-shadow;
+  width: 100%;
+  box-sizing: border-box;
 }

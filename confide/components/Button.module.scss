@@ -6,9 +6,10 @@
   padding: 1em;
   border-radius: 8px;
   background-color: $dark;
-  background: $primary-background;
   color: $light;
   cursor: pointer;
+  width: max-content;
+  box-sizing: border-box;
 
   display: flex;
   gap: 1em;
@@ -21,6 +22,10 @@
 
   &.circular {
     border-radius: 100px;
+  }
+
+  &.primary {
+    background: $primary-background;
   }
 
   &:hover {

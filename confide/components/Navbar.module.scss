@@ -1,0 +1,27 @@
+@import 'variables.scss';
+
+.Navbar {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  align-items: center;
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+
+    font-size: 0.8em;
+    color: $gray;
+    svg {
+    stroke: $gray;
+    }
+  }
+
+  button {
+    justify-self: center;
+  }
+}

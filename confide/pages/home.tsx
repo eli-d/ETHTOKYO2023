@@ -9,6 +9,7 @@ import router, { useRouter } from "next/router";
 import { useEffect } from "react";
 import { redirect } from "next/dist/server/api-utils";
 import { Card } from "@/components/Card";
+import { Navbar } from "@/components/Navbar";
 
 const Home = () => {
   const { address, isConnecting, isDisconnected } = useAccount();
@@ -24,14 +25,16 @@ const Home = () => {
   return (
     <div className={styles.Home}>
       <Card>
-        Hello world
+        <ConnectKitButton />
+        <Button 
+        fill
+        icon={<img src="/icons/qr.svg" />}
+        >
+          Show ID
+        </Button>
       </Card>
-      <Button 
-      icon={<img src="/icons/qr.svg" />}
-      >
-        Show ID
-      </Button>
-      <ConnectKitButton />
+
+      <Navbar />
     </div>
   )
 }

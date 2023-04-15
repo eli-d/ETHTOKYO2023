@@ -8,6 +8,7 @@ $subtle: #F5F3F4;
 $light: white;
 $primary: #2276FF;
 $secondary: #33A1FD;
+$gray: #E0E0E0;
 
 $primary-background: linear-gradient(10deg, $primary 0%, $secondary 100%);
 $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
@@ -19,10 +20,12 @@ $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
 
 @mixin page {
   width: 100%;
-  max-width: 1200px;
+  max-width: 600px;
+  height: 100%;
+  padding: 2em;
   display: flex;
   flex-direction: column;
   gap: 2em;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
