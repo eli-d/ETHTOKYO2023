@@ -109,16 +109,48 @@ const Validate = () => {
         </AnimatePresence>
       </motion.section>
 
-      <motion.div
+      <motion.footer
       variants={itemVariants}
       style={{width: '100%'}}
       exit={{opacity: 0, y:-20}}>
-      <Button fill onClick={() => {
-          router.back()
-        }
-      }
-        color="danger">Cancel</Button>
-      </motion.div>
+        <AnimatePresence
+          exitBeforeEnter
+        >
+        {slide !== 0 ? (
+          <motion.div
+            initial={{
+              x: -50,
+              opacity: 0,
+            }}  
+            animate={{
+              x: 0,
+              opacity: 1,
+            }}
+            exit={{
+              x: -50,
+              opacity: 0,
+          }}
+          transition={{
+            duration: 0.3,
+            ease: "easeInOut",
+          }}
+          >
+            <Button fill color="light" onClick={() => {setSlide(prev => {
+              return prev===3 ? 2 : 0
+            })}}>Back</Button>
+          </motion.div>
+        ) : <div/>}
+        <Button 
+          fill
+          onClick={() => {
+            router.back()
+          }}
+          color="danger"
+        >
+          Cancel
+        </Button>
+        </AnimatePresence>
+      </motion.footer>
       </AnimatePresence>
     </motion.main>
   </motion.div>

@@ -74,4 +74,13 @@ $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
     justify-content: center;
     align-items: center;
   }
+
+  footer {
+    width: 100%;
+    display: grid;
+    gap: 2em;
+    grid-template-columns: max-content max-content;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
