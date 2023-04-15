@@ -83,4 +83,8 @@ $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
     justify-content: space-between;
     align-items: center;
   }
+
+  input {
+    all:unset;
+  }
 }

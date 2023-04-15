@@ -42,7 +42,9 @@ const Validate = () => {
 
   const Choice = () => (
     <>
-      <Button color="keyline" fill>
+      <Button color="keyline" fill as="motion.div" layoutId="input" onClick={() => {
+        setSlide(2)
+      }}>
         Enter address manually
       </Button>
       <Button onClick={() => {setSlide(1)}} color="light" fill icon={<QrIcon />}>
@@ -70,7 +72,16 @@ const Validate = () => {
     />
   )
 
-  const Input = () => <></>
+  const Input = () =>
+  <div style={{
+    display: 'flex', gap:'1em', width:'100%', alignItems: 'center', flexWrap: 'wrap', flexDirection: 'row'
+  }}>
+    <motion.div layoutId="input" className={"input"}>
+      <input type="text" autoFocus/>
+    </motion.div>
+    <Button color="light">Check</Button>
+    </div>
+
 
   const FinalStep = () => <></>
 
@@ -91,12 +102,12 @@ const Validate = () => {
             opacity: 1,
             y: 0,
           }}
-          exit={{
+          exit={true? {
             opacity: 0,
             y: -50,
-          }}
+          } : {}}
           transition={{
-            duration: 0.5,
+            duration: 0.3,
             ease: "easeInOut",
           }}
           key={`slide-${slide}`}
@@ -135,7 +146,7 @@ const Validate = () => {
             ease: "easeInOut",
           }}
           >
-            <Button fill color="light" onClick={() => {setSlide(prev => {
+            <Button fill color="keyline" onClick={() => {setSlide(prev => {
               return prev===3 ? 2 : 0
             })}}>Back</Button>
           </motion.div>
