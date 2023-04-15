@@ -151,7 +151,7 @@ const Validate = () => {
   const FinalStep = () => <>
     <p>{testAddress}</p>
     <div
-      style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0'}}
+      style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0', alignItems: 'center'}}
     >
       <Badge size="lg" trust={!authenticity ? Trust.NONE : (
         !trustworthiness ? Trust.VERIFY : Trust.VOUCH
