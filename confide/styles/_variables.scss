@@ -30,3 +30,26 @@ $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
   align-items: center;
   justify-content: space-between;
 }
+@mixin dark-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: $dark;
+  color: $light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  main {
+    height: 100%;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    align-items: center;
+    padding: 2em;
+  }
+}

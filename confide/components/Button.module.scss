@@ -5,8 +5,6 @@
   all: unset;
   padding: 1em;
   border-radius: 8px;
-  background-color: $dark;
-  color: $light;
   cursor: pointer;
   width: max-content;
   box-sizing: border-box;
@@ -26,6 +24,25 @@
 
   &.primary {
     background: $primary-background;
+    color: $light;
+  }
+
+  &.dark {
+    background-color: $dark;
+    color: $light;
+  }
+
+  &.light {
+    background-color: $light;
+    color: $dark; svg{
+      color: $dark;
+    }
+    font-weight: 500;
+  }
+
+  &.keyline {
+    border: 1px solid $light;
+    color: $light;
   }
 
   &:hover {

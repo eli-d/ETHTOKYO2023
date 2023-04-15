@@ -10,6 +10,7 @@ interface IButton {
   fill?: boolean
   as?: 'button' | 'motion.div'
   layoutId?: string
+  color?: 'primary' | 'light' | 'dark' | 'keyline'
 }
 
 export const Button: React.FC<IButton> = ({
@@ -19,7 +20,8 @@ export const Button: React.FC<IButton> = ({
   circular,
   fill,
   as,
-  layoutId
+  layoutId,
+  color = 'dark'
 }) => {
 
   const [showContent, setShowContent] = React.useState(false)
@@ -37,6 +39,7 @@ export const Button: React.FC<IButton> = ({
     ${styles.Button}
     ${circular ? styles.circular : ''}
     ${fill ? styles.fill : ''}
+    ${styles[color]}
   `
 
   if (as==='motion.div') return (
