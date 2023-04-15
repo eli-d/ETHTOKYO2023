@@ -10,6 +10,7 @@ $light: white;
 $primary: #2276FF;
 $secondary: #33A1FD;
 $gray: #E0E0E0;
+$danger: #FF4D4F;
 
 $primary-background: linear-gradient(10deg, $primary 0%, $secondary 100%);
 $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
@@ -61,5 +62,12 @@ $primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
       align-items: center;
 
     }
+  }
+
+  header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

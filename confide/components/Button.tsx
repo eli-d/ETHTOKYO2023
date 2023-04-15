@@ -10,7 +10,7 @@ interface IButton {
   fill?: boolean
   as?: 'button' | 'motion.div'
   layoutId?: string
-  color?: 'primary' | 'light' | 'dark' | 'keyline'
+  color?: 'primary' | 'light' | 'dark' | 'keyline' | "danger"
 }
 
 export const Button: React.FC<IButton> = ({
@@ -40,6 +40,7 @@ export const Button: React.FC<IButton> = ({
     ${circular ? styles.circular : ''}
     ${fill ? styles.fill : ''}
     ${styles[color]}
+    ${layoutId ? styles.special : ''}
   `
 
   if (as==='motion.div') return (

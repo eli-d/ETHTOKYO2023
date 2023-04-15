@@ -1,23 +1,112 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import styles from './Validate.module.scss'
 import { Button } from '@/components/Button'
+import { QrReader } from 'react-qr-reader'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
-const Validate = () => {
-  return <motion.div layoutId="dark" className={styles.Validate}>
-    <main>
-      <h2>Validate user</h2>
-      <section>
-        <Button color="keyline" fill>
+const containerVariants = {
+  initial: {
+  },
+  animate: {
+    transition: {
+      delay: 0.5,
+      duration: 0.5,
+      ease: "easeInOut",
+      staggerChildren: 0.2
+    },
+  },
+  exit: {
+    transition: {
+      duration: 0.5,
+      ease: "easeInOut",
+      staggerChildren: 0.2
+    },
+  }
+}
+
+const itemVariants = {
+  initial: {
+    opacity: 0,
+    y: 20
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+}
+
+
+
+const Choice = () => <>
+<Button color="keyline" fill>
           Enter address manually
         </Button>
         <Button color="light" fill icon={
           <QrIcon />
         }>
           Scan code
-        </Button>
-      </section>
-      <div />
-    </main>
+        </Button></>
+
+const Reader = () => <QrReader 
+        constraints={{facingMode: 'user'}}
+        onResult={(result, error) => {
+          if (!!result) {
+            alert('gay')
+          }
+
+          if (!!error) {
+            console.info(error);
+          }
+        }}
+        videoStyle={{
+          height: 'auto',
+          borderRadius: '16px'
+        }}
+      /> 
+
+const Validate = () => {
+  const router = useRouter()
+  const [slide, setSlide] = useState(0)
+  return <motion.div layoutId="dark" className={styles.Validate}>
+    <motion.main initial="initial" animate="animate" exit="exit" variants={containerVariants}>
+      <AnimatePresence
+      exitBeforeEnter
+      >
+      <motion.h2 variants={itemVariants} exit={{opacity: 0, y:-20}}>Validate user</motion.h2>
+      <motion.section variants={itemVariants} exit={{opacity: 0, y:-20}}>
+        <motion.div 
+          initial={{
+            opacity: 0,
+            y: 20
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          exit={{
+            opacity: 0,
+            y: 20
+          }}
+          key={`slide-${slide}`}
+        >
+          {slide === 0 && <Choice />}
+          {slide === 1 && <Choice />}
+        </motion.div>
+      </motion.section>
+
+      <motion.div
+      variants={itemVariants}
+      style={{width: '100%'}}
+      exit={{opacity: 0, y:-20}}>
+      <Button fill onClick={() => {
+          router.back()
+        }
+      }
+        color="danger">Cancel</Button>
+      </motion.div>
+      </AnimatePresence>
+    </motion.main>
   </motion.div>
 }
 

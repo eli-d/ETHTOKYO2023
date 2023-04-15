@@ -27,6 +27,11 @@
     color: $light;
   }
 
+  &.danger {
+    background: $danger;
+    color: $light;
+  }
+
   &.dark {
     background-color: $dark;
     color: $light;
@@ -49,8 +54,9 @@
     opacity: 0.9;
   }
 
-  min-height: 4em;
-  min-width: 4em;
+    min-height: 4em;
+    min-width: 4em;
+
   img {
     height: 100%;
   }
