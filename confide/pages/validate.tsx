@@ -28,7 +28,7 @@ const containerVariants = {
 const itemVariants = {
   initial: {
     opacity: 0,
-    y: 20
+    y: 50
   },
   animate: {
     opacity: 1,
@@ -36,38 +36,44 @@ const itemVariants = {
   },
 }
 
-
-
-const Choice = () => <>
-<Button color="keyline" fill>
-          Enter address manually
-        </Button>
-        <Button color="light" fill icon={
-          <QrIcon />
-        }>
-          Scan code
-        </Button></>
-
-const Reader = () => <QrReader 
-        constraints={{facingMode: 'user'}}
-        onResult={(result, error) => {
-          if (!!result) {
-            alert('gay')
-          }
-
-          if (!!error) {
-            console.info(error);
-          }
-        }}
-        videoStyle={{
-          height: 'auto',
-          borderRadius: '16px'
-        }}
-      /> 
-
 const Validate = () => {
   const router = useRouter()
   const [slide, setSlide] = useState(0)
+
+  const Choice = () => (
+    <>
+      <Button color="keyline" fill>
+        Enter address manually
+      </Button>
+      <Button onClick={() => {setSlide(1)}} color="light" fill icon={<QrIcon />}>
+        Scan code
+      </Button>
+    </>
+  );
+
+  const Reader = () => (
+    <QrReader
+      constraints={{ facingMode: "user" }}
+      onResult={(result, error) => {
+        if (!!result) {
+          alert("stuff");
+        }
+
+        if (!!error) {
+          console.info(error);
+        }
+      }}
+      videoStyle={{
+        height: "auto",
+        borderRadius: "16px",
+      }}
+    />
+  )
+
+  const Input = () => <></>
+
+  const FinalStep = () => <></>
+
   return <motion.div layoutId="dark" className={styles.Validate}>
     <motion.main initial="initial" animate="animate" exit="exit" variants={containerVariants}>
       <AnimatePresence
@@ -75,10 +81,11 @@ const Validate = () => {
       >
       <motion.h2 variants={itemVariants} exit={{opacity: 0, y:-20}}>Validate user</motion.h2>
       <motion.section variants={itemVariants} exit={{opacity: 0, y:-20}}>
+        <AnimatePresence exitBeforeEnter>
         <motion.div 
           initial={{
             opacity: 0,
-            y: 20
+            y: 50
           }}
           animate={{
             opacity: 1,
@@ -86,13 +93,20 @@ const Validate = () => {
           }}
           exit={{
             opacity: 0,
-            y: 20
+            y: -50,
+          }}
+          transition={{
+            duration: 0.5,
+            ease: "easeInOut",
           }}
           key={`slide-${slide}`}
         >
           {slide === 0 && <Choice />}
-          {slide === 1 && <Choice />}
+          {slide === 1 && <Reader />}
+          {slide === 2 && <Input />}
+          {slide === 3 && <FinalStep />}
         </motion.div>
+        </AnimatePresence>
       </motion.section>
 
       <motion.div
