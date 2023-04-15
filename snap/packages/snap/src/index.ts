@@ -1,5 +1,7 @@
-import { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { panel, text } from '@metamask/snaps-ui';
+import { OnRpcRequestHandler, OnTransactionHeader } from '@metamask/snaps-types';
+import { panel, heading, text, copyable } from '@metamask/snaps-ui';
+
+const trustDiscriminator = '0xe0dd65c9';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -30,7 +32,6 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
       })
 
           if (res) {
-            console.log('suck own dick');
               let accounts = await ethereum.request({method: 'eth_requestAccounts'});
               console.log(request);
               
@@ -47,5 +48,28 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
     default:
       throw new Error('Method not found.');
   }
+};
+
+
+export const onTransaction: OnTransactionHandler = async ({
+  transaction,
+  chainId,
+  transactionOrigin,
+}) => {
+    if (transaction.to.toLowerCase() == '0x5FbDB2315678afecb367f032d93F642f64180aa3'.toLowerCase() && transaction.data.slice(0,10) == trustDiscriminator) {
+
+        let b = transaction.data.slice(10+64+24,10+128);
+        let trust = transaction.data.slice(10+128,10+196);
+
+        return {content: panel([
+      heading('Confide Trust Transaction'),
+            text('Account to be trusted:'),
+            copyable('0x' + b),
+            text('Trust Level:'),
+            text(Number('0x' + trust).toString()),
+    ])};
+    } else {
+        return {};
+    }
 };
 
