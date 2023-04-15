@@ -1,11 +1,11 @@
 @import 'variables.scss';
 
 .Navbar {
-  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   width: 100%;
   align-items: end;
+  height: 130px;
 
   .item {
     display: flex;
