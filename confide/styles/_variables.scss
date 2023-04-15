@@ -1,0 +1,94 @@
+@font-face {
+  font-family: 'Gilroy-Bold';
+  src: url('/fonts/Gilroy-Bold.ttf');
+}
+
+$dark: #00171F;
+$dark-hover: #323232;
+$subtle: #F5F3F4;
+$light: white;
+$primary: #2276FF;
+$secondary: #33A1FD;
+$gray: #E0E0E0;
+$danger: #FF4D4F;
+
+$primary-background: linear-gradient(10deg, $primary 0%, $secondary 100%);
+$primary-background-hover: linear-gradient(10deg, $secondary 0%, $primary 100%);
+
+//make a mixin for a box shadow
+@mixin box-shadow {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 4px 8px rgba(0, 0, 0, 0.082);
+}
+
+@mixin box-shadow-strong {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.153);
+}
+
+@mixin page {
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  align-items: center;
+  justify-content: space-between;
+}
+@mixin dark-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: $dark;
+  color: $light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  main {
+    height: 100%;
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    align-items: center;
+    padding: 4em 2em;
+    justify-content: space-between;
+
+    section {
+      width: 100%;
+      div {
+        
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      gap: 1em;
+      align-items: center;
+
+    }
+    }
+  }
+
+  header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  footer {
+    width: 100%;
+    display: grid;
+    gap: 2em;
+    grid-template-columns: max-content max-content;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  input {
+    all:unset;
+  }
+}

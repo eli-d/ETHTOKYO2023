@@ -1,0 +1,33 @@
+@import 'variables.scss';
+
+.Home {
+ @include page;
+}
+
+.QrModal {
+  max-width: 300px;
+  background-color: $dark;
+  color: $light;
+  width: 100%;
+  position: absolute;
+  padding: 2em;
+  border-radius: 16px;
+  top:50%;
+  left: 50%;
+  translate: -50% -50%;
+  z-index: 1;
+  @include box-shadow-strong;
+  border-radius: 16px;
+
+  canvas {
+    width: 100% !important;
+    aspect-ratio: 1/1 !important;
+    height: auto !important;
+  }
+}
+
+:export {
+  dark: $dark;
+  light: $light;
+  primary: $primary;
+}
