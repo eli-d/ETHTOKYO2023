@@ -110,7 +110,7 @@ const findPath_ = async(a: string, b: string) => {
 
         for (let edge of edges) {
             const [address, trust] = edge;
-            if (!seen.has(address) && trust > Trust.PARTIAL) {
+            if (!seen.has(address) && trust > Trust.VERIFY) {
                 parent.set(address, node)
 
                 if (address === b) {
@@ -150,7 +150,7 @@ const findTrustedIntermediaries_ = async(a: string, b: string) => {
         const {_address: address, trustLevel: trust} = edge;
         if (trust > 1) {
             if (await contract.getTrustLevel(address, b) > 1) {
-                return [{address, trust: Trust.FULL}];
+                return [{address, trust: Trust.VOUCH}];
             }
         } else if (trust > 0) {
             if (await contract.getTrustLevel(address, b) > 1) {
@@ -158,11 +158,11 @@ const findTrustedIntermediaries_ = async(a: string, b: string) => {
             }
         }
         if (partial.length == 3) {
-            return partial.map(address => ({address, trust: Trust.PARTIAL}));
+            return partial.map(address => ({address, trust: Trust.VERIFY}));
         }
     }
 
-    return partial.map(address => ({address, trust: Trust.PARTIAL}));
+    return partial.map(address => ({address, trust: Trust.VERIFY}));
 }
 
 // wrap as failed paths revert/throw
@@ -175,7 +175,7 @@ export const findTrustedIntermediaries = async(a: string, b: string) => {
 }
 
 // Get path of trust between two parties and verify it on-chain
-export const verifyTrust = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
+export const verifyTrust = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
     if (await contract.getTrustLevel(myAddress, addressToTrust) > 1) {
@@ -183,7 +183,7 @@ export const verifyTrust = async(myAddress: string, addressToTrust: string, sign
         return resp.wait().transactionHash;
     }
 
-    const intermediaries = findTrustedIntermediaries(myAddress, addressToTrust);
+    const intermediaries = await findTrustedIntermediaries(myAddress, addressToTrust);
 
     if (intermediaries.length == 0) {
         return false;
@@ -197,7 +197,7 @@ export const verifyTrust = async(myAddress: string, addressToTrust: string, sign
 }
 
 // Get path of trust between two parties and verify it on-chain
-export const verifyTrustLocal = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
+export const verifyTrustLocal = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
     if (await contract.getTrustLevel(myAddress, addressToTrust) > 1) {
@@ -205,7 +205,7 @@ export const verifyTrustLocal = async(myAddress: string, addressToTrust: string,
         return resp.wait().transactionHash;
     }
 
-    const intermediaries = findTrustedIntermediaries(myAddress, addressToTrust);
+    const intermediaries = await findTrustedIntermediaries(myAddress, addressToTrust);
 
     if (intermediaries.length == 0) {
         return false;
@@ -219,10 +219,10 @@ export const verifyTrustLocal = async(myAddress: string, addressToTrust: string,
 }
 
 // Get path of authenticity (5 degrees) between two parties and verify it on-chain
-export const verifyAuth = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
+export const verifyAuth = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
-    const path = findPath(myAddress, addressToTrust);
+    const path = await findPath(myAddress, addressToTrust);
 
     if (path.length == 0) {
         return false;
@@ -236,10 +236,10 @@ export const verifyAuth = async(myAddress: string, addressToTrust: string, signe
 }
 
 // Get path of authenticity (5 degrees) between two parties and verify it on-chain
-export const verifyAuthLocal = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
+export const verifyAuthLocal = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
-    const path = findPath(myAddress, addressToTrust);
+    const path = await findPath(myAddress, addressToTrust);
 
     if (path.length == 0) {
         return false;

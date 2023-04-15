@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { trustAddress } from '@/util'
-import { findPath, verifyAuth, verifyAuthLocal, verifyTrust, verifyTrustLocal } from '@/bfs'
+import { findPath, verifyAuth, verifyAuthLocal, verifyTrust, verifyTrustLocal } from '@/util'
 import Head from 'next/head'
 import { Trust } from '@/types'
 import { Badge } from '@/components/Badge'
@@ -48,7 +48,7 @@ const Validate = () => {
   const [slide, setSlide] = useState(0)
   const [testAddress, setTestAddress] = useState('')  
   const [trustworthiness, setTrustworthiness] = useState(undefined)
-  const [authenticity, setAuthenticity] = useState(undefined)
+  const [authenticity, setAuthenticity] = useState<boolean | undefined>(undefined)
   const regex = useMemo(() => new RegExp("^0x[a-fA-F0-9]{40}$"), [])
 
   const routerAddress = router.query.address as string | undefined
