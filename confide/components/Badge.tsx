@@ -2,12 +2,14 @@ import { Trust } from '@/types'
 import styles from './Badge.module.scss'
 
 interface IBadge {
-  trust: Omit<Trust, 0>
+  trust: Trust
   size?: "sm" | "lg"
 }
 
-const getImageSrcFromTrust = (trust: Omit<Trust, 0>) => {
+const getImageSrcFromTrust = (trust: Trust) => {
   switch (trust) {
+    case 0:
+      return "/icons/untrusted.svg"
     case 1:
       return "/icons/verified.svg"
     case 2:
@@ -19,8 +21,9 @@ const getImageSrcFromTrust = (trust: Omit<Trust, 0>) => {
 
 export const Badge: React.FC<IBadge> = ({
   trust,
+  size="sm"
 }) => {
-  return <div className={styles.Badge}>
+  return <div className={`${styles.Badge} ${styles[size]}`}>
     <img src={getImageSrcFromTrust(trust)}/>
   </div>
 }

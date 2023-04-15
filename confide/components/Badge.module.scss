@@ -1,8 +1,17 @@
 @import 'variables.scss';
 
 .Badge {
-  img {
-    height: 24px;
-    width: 24px;
+  &.sm {
+    img {
+      height: 24px;
+      width: 24px;
+    }
   }
+  &.lg {
+    img {
+      height: 64px;
+      width: 64px;
+    }
+  }
+
 }

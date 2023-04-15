@@ -1,11 +1,11 @@
-import {JsonRpcProvider, JsonRpcSigner, ethers} from "ethers";
+import {ethers} from "ethers";
 import CONFIDE_ABI from "./Confide.json";
 
 export enum Trust {
-    NONE,
-    PARTIAL,
-    FULL,
-    FULLER
+    NONE=0,
+    VERIFY=1,
+    VOUCH=2,
+    CONFIDE=3   
 };
 
 export enum Authenticity {
@@ -47,7 +47,7 @@ export const createOwnerProof = async(myAddress: string, otherAddress: string): 
 // return address that signed or null if incorrect
 export const importOwnerProof = async(proof: string, expectedSigner: string, myAddress: string): Promise<string | null> => {
     const msg = myAddress; 
-    const verifiedAddress = ethers.verifyMessage(msg, proof);
+    const verifiedAddress = ethers.utils.verifyMessage(msg, proof);
     if (verifiedAddress !== expectedSigner)
         return null;
     return verifiedAddress;

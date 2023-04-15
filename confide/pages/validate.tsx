@@ -3,7 +3,14 @@ import styles from './Validate.module.scss'
 import { Button } from '@/components/Button'
 import { QrReader } from 'react-qr-reader'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useAccount } from 'wagmi'
+import { trustAddress } from '@/util'
+import { findPath, verifyAuth, verifyAuthLocal, verifyTrust, verifyTrustLocal } from '@/bfs'
+import Head from 'next/head'
+import { Trust } from '@/types'
+import { Badge } from '@/components/Badge'
+import { Card } from '@/components/Card'
 
 const containerVariants = {
   initial: {
@@ -39,6 +46,43 @@ const itemVariants = {
 const Validate = () => {
   const router = useRouter()
   const [slide, setSlide] = useState(0)
+  const [testAddress, setTestAddress] = useState('')  
+  const [trustworthiness, setTrustworthiness] = useState(undefined)
+  const [authenticity, setAuthenticity] = useState(undefined)
+  const regex = useMemo(() => new RegExp("^0x[a-fA-F0-9]{40}$"), [])
+
+  const routerAddress = router.query.address as string | undefined
+
+
+
+  const { address, isConnecting, isDisconnected } = useAccount();
+  const [isLoading, setisLoading] = useState(false)
+
+  const verify = async(address: string, addy: string) => {
+    setisLoading(true)
+    console.log("using ad",addy)
+    console.log(await findPath(address, addy))
+    const auth = await verifyAuthLocal(address, addy);
+    const trust = await verifyTrustLocal(address, addy);
+    setTrustworthiness(trust);
+    setAuthenticity(auth);
+    setisLoading(false)
+    setSlide(3)
+  }
+
+  useEffect(() => {
+  if (routerAddress && address && regex.test(routerAddress)) {
+    setSlide(3)
+    setTestAddress(routerAddress)
+    verify(address, routerAddress)
+  }
+  }, [routerAddress, address, regex])
+
+  useEffect(() => {
+    if (!address) {
+      router.push('/')
+    }
+  }, [address, router])
 
   const Choice = () => (
     <>
@@ -55,10 +99,10 @@ const Validate = () => {
 
   const Reader = () => (
     <QrReader
-      constraints={{ facingMode: "user" }}
+      constraints={{ facingMode: "environment" }}
       onResult={(result, error) => {
         if (!!result) {
-          alert("stuff");
+
         }
 
         if (!!error) {
@@ -72,20 +116,58 @@ const Validate = () => {
     />
   )
 
-  const Input = () =>
-  <div style={{
+  const Input = () => {
+    const [hint, setHint] = useState<string | undefined>(undefined)
+
+  return <div style={{
     display: 'flex', gap:'1em', width:'100%', alignItems: 'center', flexWrap: 'wrap', flexDirection: 'row'
   }}>
     <motion.div layoutId="input" className={"input"}>
-      <input type="text" autoFocus/>
+      <input value={testAddress} onChange={v => {setTestAddress(v.target.value)
+      setHint(undefined)}} type="text" autoFocus/>
     </motion.div>
-    <Button color="light">Check</Button>
+    <Button onClick={() => {
+      if (!regex.test(testAddress)) {
+        setHint("Invalid address")
+        return
+      }
+      address && verify(address, testAddress)}} color="light">Check</Button>
+      {hint}
+  </div>}
+
+
+  const FinalStep = () => <>
+    <p>{testAddress}</p>
+    <div
+      style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0'}}
+    >
+      <Badge size="lg" trust={!authenticity ? Trust.NONE : (
+        !trustworthiness ? Trust.NONE : Trust.VERIFY
+      )}/>
+      { !authenticity ? <p>We cannot validate the authenticity of this user.</p> :
+      ( !trustworthiness ? <p>This person might be real, but we cannot verify their trustworthiness.</p> :
+      <p>This person is likely to be real and trustworthy.</p>)
+    }
     </div>
 
+    <Button color={authenticity ? "light" : "danger"}
+      onClick={() => {
+        router.push(`/verify?address=${testAddress}`)
+      }}
+    >
+      Add this user to my Circle {!authenticity && "anyway"}
+    </Button>
+  </>
 
-  const FinalStep = () => <></>
+  const Loading = () => <>Loading...</>
 
   return <motion.div layoutId="dark" className={styles.Validate}>
+          <Head>
+        <title>Confide</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/ico" href="/icons/favicon.ico" sizes="32x32"/>
+
+      </Head>
     <motion.main initial="initial" animate="animate" exit="exit" variants={containerVariants}>
       <AnimatePresence
       exitBeforeEnter
@@ -110,12 +192,14 @@ const Validate = () => {
             duration: 0.3,
             ease: "easeInOut",
           }}
-          key={`slide-${slide}`}
+          key={`slide-${slide}-${isLoading ? "y" : 'n'}`}
         >
+          {isLoading ? <Loading /> : <>
           {slide === 0 && <Choice />}
           {slide === 1 && <Reader />}
           {slide === 2 && <Input />}
           {slide === 3 && <FinalStep />}
+          </>}
         </motion.div>
         </AnimatePresence>
       </motion.section>
@@ -154,9 +238,9 @@ const Validate = () => {
         <Button 
           fill
           onClick={() => {
-            router.back()
+            router.push('/home')
           }}
-          color="danger"
+          color={slide !== 3 ? 'danger' : 'light'}
         >
           Cancel
         </Button>
