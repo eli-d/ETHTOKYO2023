@@ -201,8 +201,7 @@ export const verifyTrustLocal = async(myAddress: string, addressToTrust: string,
     const contract = await ConfideContract(signer);
 
     if (await contract.getTrustLevel(myAddress, addressToTrust) > 1) {
-        const resp = await contract.postConnected(myAddress, addressToTrust, []);
-        return resp.wait().transactionHash;
+        return await contract.connected(myAddress, addressToTrust, []);
     }
 
     const intermediaries = await findTrustedIntermediaries(myAddress, addressToTrust);

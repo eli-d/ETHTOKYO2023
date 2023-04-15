@@ -5,8 +5,7 @@ import { QrReader } from 'react-qr-reader'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
-import { trustAddress } from '@/util'
-import { findPath, verifyAuth, verifyAuthLocal, verifyTrust, verifyTrustLocal } from '@/util'
+import { findPath, verifyAuthLocal, verifyTrustLocal } from '@/util'
 import Head from 'next/head'
 import { Trust } from '@/types'
 import { Badge } from '@/components/Badge'
@@ -142,7 +141,7 @@ const Validate = () => {
       style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0'}}
     >
       <Badge size="lg" trust={!authenticity ? Trust.NONE : (
-        !trustworthiness ? Trust.NONE : Trust.VERIFY
+        !trustworthiness ? Trust.VERIFY : Trust.VOUCH
       )}/>
       { !authenticity ? <p>We cannot validate the authenticity of this user.</p> :
       ( !trustworthiness ? <p>This person might be real, but we cannot verify their trustworthiness.</p> :
