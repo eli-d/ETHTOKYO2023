@@ -1,4 +1,5 @@
 import {ConfideContract, Trust} from "./util";
+import {ethers} from "ethers";
 
 export const backtrace = (parent: Map<string, string>, a: string, b: string) => {
     let path = [b];
@@ -11,12 +12,15 @@ export const backtrace = (parent: Map<string, string>, a: string, b: string) => 
     path = path.reverse();
 
     if (path.length <= 5) {
-        return path.slice(1,path.length-1);
+        if (path.length )
+        return path;//.slice(1,path.length-1);
     }
     return [];
 }
 
 const findPath_ = async(a: string, b: string) => {
+    a = a.toLowerCase();
+    b = b.toLowerCase();
     const contract = await ConfideContract();
 
     let seen = new Set();
@@ -33,11 +37,12 @@ const findPath_ = async(a: string, b: string) => {
         const edges = await contract.getEdges(node);
 
         for (let edge of edges) {
-            const [address, trust] = edge;
-            if (!seen.has(address) && trust > Trust.PARTIAL) {
+            const [address_, trust] = edge;
+            const address = address_.toLowerCase();
+            if (!seen.has(address) && trust > Trust.VERIFY) {
                 parent.set(address, node)
-
                 if (address === b) {
+                    console.log("address is b",parent,a,b)
                     return backtrace(parent, a, b);
                 }
 
@@ -59,6 +64,7 @@ export const findPath = async(a: string, b: string) => {
     try {
         return await findPath_(a, b)
     } catch (e){
+        console.error(e)
         return [];
     }
 }
@@ -74,7 +80,7 @@ const findTrustedIntermediaries_ = async(a: string, b: string) => {
         const {_address: address, trustLevel: trust} = edge;
         if (trust > 1) {
             if (await contract.getTrustLevel(address, b) > 1) {
-                return [{address, trust: Trust.FULL}];
+                return [{address, trust: Trust.VOUCH}];
             }
         } else if (trust > 0) {
             if (await contract.getTrustLevel(address, b) > 1) {
@@ -82,11 +88,11 @@ const findTrustedIntermediaries_ = async(a: string, b: string) => {
             }
         }
         if (partial.length == 3) {
-            return partial.map(address => ({address, trust: Trust.PARTIAL}));
+            return partial.map(address => ({address, trust: Trust.VERIFY}));
         }
     }
 
-    return partial.map(address => ({address, trust: Trust.PARTIAL}));
+    return partial.map(address => ({address, trust: Trust.VERIFY}));
 }
 
 // wrap as failed paths revert/throw
@@ -98,11 +104,46 @@ export const findTrustedIntermediaries = async(a: string, b: string) => {
     }
 }
 
-// Get path of trust between two parties and verify it on-chain
-export const verifyTrust = async(myAddress: string, addressToTrust: string, signer?: ethers.JsonRpcSigner) => {
+// Get path of trust between two parties 
+export const verifyTrustLocal = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
-    const intermediaries = findTrustedIntermediaries(myAddress, addressToTrust);
+    const intermediaries = await findTrustedIntermediaries(myAddress, addressToTrust);
+
+    if (intermediaries.length == 0) {
+        return false;
+    }
+    try {
+        return await contract.connected(myAddress, addressToTrust, intermediaries);
+    } catch (e) {
+        console.error(e)
+        return false;
+    }
+}
+
+// Get path of authenticity (5 degrees) between two parties
+export const verifyAuthLocal = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
+    const contract = await ConfideContract(signer);
+
+    const path = await findPath(myAddress, addressToTrust);
+console.log("path",path)
+    if (path.length == 0) {
+        return false;
+    }
+    try {
+        return await contract.Connected5Degrees(myAddress, addressToTrust, path);
+    } catch (e) {
+        console.error(e)
+
+        return false;
+    }
+}
+
+// Get path of trust between two parties and verify it on-chain
+export const verifyTrust = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
+    const contract = await ConfideContract(signer);
+
+    const intermediaries = await findTrustedIntermediaries(myAddress, addressToTrust);
 
     if (intermediaries.length == 0) {
         return false;
@@ -111,23 +152,26 @@ export const verifyTrust = async(myAddress: string, addressToTrust: string, sign
         const resp = await contract.postConnected(myAddress, addressToTrust, intermediaries);
         return resp.wait().transactionHash;
     } catch (e) {
+        console.error(e)
         return false;
     }
 }
 
 // Get path of authenticity (5 degrees) between two parties and verify it on-chain
-export const verifyAuth = async(myAddress: string, addressToTrust: string, signer?: ethers.JsonRpcSigner) => {
+export const verifyAuth = async(myAddress: string, addressToTrust: string, signer?: ethers.providers.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
-    const path = findPath(myAddress, addressToTrust);
-
+    const path = await findPath(myAddress, addressToTrust);
+console.log("path",path)
     if (path.length == 0) {
         return false;
     }
     try {
-        const resp = await contract.postConnected5Degrees(myAddress, addressToTrust, path);
+        const resp = await contract.postConnected5Degrees(myAddress, addressToTrust, path.slice(1, path.length - 1));
         return resp.wait().transactionHash;
     } catch (e) {
+        console.error(e)
+
         return false;
     }
 }
