@@ -47,8 +47,10 @@ contract Confide {
     }
 
     function connected(address a, address b, address[] calldata intermediates) public view {
-        require(intermediates.length == 3 || intermediates.length == 1, "Length of intermediate array must be 1 or 3");
-        if (intermediates.length == 1) {
+        require(intermediates.length == 0 || intermediates.length == 3 || intermediates.length == 1, "Length of intermediate array must be 1 or 3");
+        if (intermediates.length == 0) {
+            require(getTrustLevel(a, b) > 1, "Account is not full trust");
+        } else if (intermediates.length == 1) {
             connectedFullTrust(a, b, intermediates[0]);
         } else {
             connectedPartialTrust(a, b, intermediates[0], intermediates[1], intermediates[2]);

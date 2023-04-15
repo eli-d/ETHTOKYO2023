@@ -99,8 +99,13 @@ export const findTrustedIntermediaries = async(a: string, b: string) => {
 }
 
 // Get path of trust between two parties and verify it on-chain
-export const verifyTrust = async(myAddress: string, addressToTrust: string, signer?: ethers.JsonRpcSigner) => {
+export const verifyTrust = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
+
+    if (await contract.getTrustLevel(myAddress, addressToTrust) > 1) {
+        const resp = await contract.postConnected(myAddress, addressToTrust, []);
+        return resp.wait().transactionHash;
+    }
 
     const intermediaries = findTrustedIntermediaries(myAddress, addressToTrust);
 
@@ -116,7 +121,7 @@ export const verifyTrust = async(myAddress: string, addressToTrust: string, sign
 }
 
 // Get path of authenticity (5 degrees) between two parties and verify it on-chain
-export const verifyAuth = async(myAddress: string, addressToTrust: string, signer?: ethers.JsonRpcSigner) => {
+export const verifyAuth = async(myAddress: string, addressToTrust: string, signer?: ethers.provider.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
 
     const path = findPath(myAddress, addressToTrust);

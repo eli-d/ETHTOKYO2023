@@ -20,9 +20,9 @@ export type Account = {
 }
 
 export const CONFIDE_CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-export const ConfideContract = (async(signer?: ethers.JsonRpcSigner) => {
+export const ConfideContract = (async(signer?: ethers.providers.JsonRpcSigner) => {
     if (!signer) {
-        const provider = new ethers.JsonRpcProvider();
+        const provider = new ethers.providers.JsonRpcProvider();
         signer = await provider.getSigner();
     }
         
@@ -39,7 +39,7 @@ export const getTrustedAccounts = async(address: string): Promise<Account[]> => 
 // b64
 export const createOwnerProof = async(myAddress: string, otherAddress: string): Promise<string> => {
     // sign a message with my account containing their address (and a nonce? time specific?)
-    const provider = new ethers.JsonRpcProvider();
+    const provider = new ethers.providers.JsonRpcProvider();
     const signer = await provider.getSigner();
     return await signer.signMessage(otherAddress);
 }
@@ -66,7 +66,7 @@ export const lookupAddress = async(myAddress: string, otherAddress: string): Pro
     }
 }
 
-export const trustAddress = async(myAddress: string, addressToTrust: string, level: Trust, signer?: ethers.JsonRpcSigner) => {
+export const trustAddress = async(myAddress: string, addressToTrust: string, level: Trust, signer?: ethers.providers.JsonRpcSigner) => {
     const contract = await ConfideContract(signer);
     await contract.trust(myAddress, addressToTrust, level);
 }
