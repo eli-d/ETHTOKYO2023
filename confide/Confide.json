@@ -1,4 +1,27 @@
 [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "a",
+          "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "b",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "intermediates",
+        "type": "address[]"
+      }
+    ],
+    "name": "connected",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  },
   {
     "inputs": [
       {
@@ -13,11 +36,11 @@
       },
       {
         "internalType": "address[]",
-        "name": "intermediates",
+        "name": "path",
         "type": "address[]"
       }
     ],
-    "name": "connected",
+    "name": "connected5Degrees",
     "outputs": [],
     "stateMutability": "view",
     "type": "function"
@@ -131,6 +154,52 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "a",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "b",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "intermediates",
+        "type": "address[]"
+      }
+    ],
+    "name": "postConnected",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "a",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "b",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "path",
+        "type": "address[]"
+      }
+    ],
+    "name": "postConnected5Degrees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
