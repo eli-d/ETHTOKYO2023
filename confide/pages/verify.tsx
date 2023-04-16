@@ -1,4 +1,4 @@
-import { useAccount } from 'wagmi';
+import { useAccount, useSigner } from 'wagmi';
 import styles from './Verify.module.scss'
 import {motion, AnimatePresence} from 'framer-motion'
 import { useRouter } from 'next/router';
@@ -48,6 +48,7 @@ const Verify = () => {
   const [authenticity, setAuthenticity] = useState(undefined)
   const regex = useMemo(() => new RegExp("^0x[a-fA-F0-9]{40}$"), [])
   const { address, isConnecting, isDisconnected } = useAccount();
+  const { data: signer } = useSigner();
   const router = useRouter();
 
 
@@ -123,23 +124,23 @@ const Verify = () => {
       style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0'}}
     >
       <Button onClick={() => {
-        address && trustAddress(address, testAddress, Trust.VERIFY)
+        address && trustAddress(address, testAddress, Trust.VERIFY, signer)
         router.push('/circle')
         
       }} fill icon={<Badge trust={Trust.VERIFY}/>} color="keyline">
         Verify the Personhood of this user
       </Button>
-      <Button onClick={() => {address && trustAddress(address, testAddress, Trust.VOUCH)
+      <Button onClick={() => {address && trustAddress(address, testAddress, Trust.VOUCH, signer)
         router.push('/circle')
       }} fill icon={<Badge trust={Trust.VOUCH}/>} color="keyline">
         Vouch for the Authenticity of this user
       </Button>
-      <Button  onClick={() => {address && trustAddress(address, testAddress, Trust.CONFIDE)
+      <Button  onClick={() => {address && trustAddress(address, testAddress, Trust.CONFIDE, signer)
         router.push('/circle')
       }} fill icon={<Badge trust={Trust.CONFIDE}/>} color="keyline">
         Confide in the Trustworthiness of this user
       </Button>
-      <Button onClick={() => {address && trustAddress(address, testAddress, Trust.NONE)
+      <Button onClick={() => {address && trustAddress(address, testAddress, Trust.NONE, signer)
         router.push('/circle')
       }} fill icon={<Badge trust={Trust.NONE}/>} color="keyline">
         Revoke all trust in this user
