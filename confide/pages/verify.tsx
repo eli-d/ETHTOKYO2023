@@ -124,23 +124,31 @@ const Verify = () => {
       style={{display: 'flex', flexDirection: 'column', gap: '1em', margin: '2em 0'}}
     >
       <Button onClick={() => {
+        // @ts-ignore
         address && trustAddress(address, testAddress, Trust.VERIFY, signer)
         router.push('/circle')
         
       }} fill icon={<Badge trust={Trust.VERIFY}/>} color="keyline">
         Verify the Personhood of this user
       </Button>
-      <Button onClick={() => {address && trustAddress(address, testAddress, Trust.VOUCH, signer)
+      
+      <Button onClick={() => {
+        // @ts-ignore
+        address && trustAddress(address, testAddress, Trust.VOUCH, signer)
         router.push('/circle')
       }} fill icon={<Badge trust={Trust.VOUCH}/>} color="keyline">
         Vouch for the Authenticity of this user
       </Button>
-      <Button  onClick={() => {address && trustAddress(address, testAddress, Trust.CONFIDE, signer)
+      <Button  onClick={() => {
+        // @ts-ignore
+        address && trustAddress(address, testAddress, Trust.CONFIDE, signer)
         router.push('/circle')
       }} fill icon={<Badge trust={Trust.CONFIDE}/>} color="keyline">
         Confide in the Trustworthiness of this user
       </Button>
-      <Button onClick={() => {address && trustAddress(address, testAddress, Trust.NONE, signer)
+      <Button onClick={() => {
+        // @ts-ignore
+        address && trustAddress(address, testAddress, Trust.NONE, signer)
         router.push('/circle')
       }} fill icon={<Badge trust={Trust.NONE}/>} color="keyline">
         Revoke all trust in this user
